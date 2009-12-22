@@ -43,3 +43,46 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
+
+require 'pp'
+desc "Download xml"
+task :data => [:data_directories,
+               'data/emoji4unicode.xml',
+               'data/docomo/carrier_data.xml',
+               'data/kddi/carrier_data.xml',
+               'data/softbank/carrier_data.xml']
+
+task :data_directories do
+  FileUtils.mkdir_p 'data'
+  FileUtils.mkdir_p 'data/docomo'
+  FileUtils.mkdir_p 'data/kddi'
+  FileUtils.mkdir_p 'data/softbank'
+end
+
+file 'data/emoji4unicode.xml' do
+  require 'open-uri'
+  File.open('data/emoji4unicode.xml','wb') do |out|
+    out.print open('http://emoji4unicode.googlecode.com/svn/trunk/data/emoji4unicode.xml').read
+  end
+end
+
+file 'data/docomo/carrier_data.xml' do
+  require 'open-uri'
+  File.open('data/docomo/carrier_data.xml','wb') do |out|
+    out.print open('http://emoji4unicode.googlecode.com/svn/trunk/data/docomo/carrier_data.xml').read
+  end
+end
+
+file 'data/kddi/carrier_data.xml' do
+  require 'open-uri'
+  File.open('data/kddi/carrier_data.xml','wb') do |out|
+    out.print open('http://emoji4unicode.googlecode.com/svn/trunk/data/kddi/carrier_data.xml').read
+  end
+end
+
+file 'data/softbank/carrier_data.xml' do
+  require 'open-uri'
+  File.open('data/softbank/carrier_data.xml','wb') do |out|
+    out.print open('http://emoji4unicode.googlecode.com/svn/trunk/data/softbank/carrier_data.xml').read
+  end
+end
