@@ -53,7 +53,7 @@ module E4U
       when 'softbank'
         E4U.softbank.find{ |e| e[:unicode] == softbank }.softbank_emoji
       else
-        raise ArgumentsError
+        raise ArgumentError
       end
     end
   end

@@ -78,19 +78,23 @@ describe E4U::Google do
       @emj.desc.should match(/clear weather/i)
     end
 
-    it "DoCoMo絵文字に変換できること" do
+    it "translate(:docomo)でDoCoMo絵文字に変換できること" do
       de = @emj.translate :docomo
       de.utf8.should == [0xE63E].pack('U')
     end
 
-    it "KDDI絵文字に変換できること" do
+    it "translate(:kddi)でKDDI絵文字に変換できること" do
       de = @emj.translate :kddi
       de.utf8.should == [0xE488].pack('U')
     end
 
-    it "Softbank絵文字に変換できること" do
+    it "translate(:softbank)でSoftbank絵文字に変換できること" do
       de = @emj.translate :softbank
       de.utf8.should == [0xE04A].pack('U')
+    end
+
+    it "translateでArgumentErrorが起こること" do
+      lambda{ @emj.translate :emobile }.should raise_error ArgumentError
     end
 
     it "proposal?が返ってくること" do
