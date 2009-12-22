@@ -36,21 +36,21 @@ describe E4U::Google do
     de = @google.find{ |e| e[:id] == '000' }.docomo_emoji
     de.should be_instance_of E4U::DoCoMo::Emoji
     de.utf8.should == [0xE63E].pack('U')
-    de.sjis.should == "\xF8\x9F"
+    de.sjis.dump.should == "\xF8\x9F".dump
   end
 
   it "kddi_emojiでE4U::KDDI::Emojiが返ってくること" do
     ke = @google.find{ |e| e[:id] == '000' }.kddi_emoji
     ke.should be_instance_of E4U::KDDI::Emoji
     ke.utf8.should == [0xE488].pack('U')
-    ke.sjis.should == "\xF6\x60"
+    ke.sjis.dump.should == "\xF6\x60".dump
   end
 
   it "softbank_emojiでE4U::Softbank::Emojiが返ってくること" do
     se = @google.find{ |e| e[:id] == '000' }.softbank_emoji
     se.should be_instance_of E4U::Softbank::Emoji
     se.utf8.should == [0xE04A].pack('U')
-    se.sjis.should == "\xF9\x8B"
+    se.sjis.dump.should == "\xF9\x8B".dump
   end
 
   describe E4U::Google::Emoji do

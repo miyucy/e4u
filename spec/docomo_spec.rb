@@ -44,7 +44,7 @@ describe E4U::DoCoMo do
     end
 
     it "sjisが返ってくること" do
-      @emj.sjis.should == "\xF8\x9F"
+      @emj.sjis.dump.should == "\xF8\x9F".dump
     end
 
     it "alternate?が返ってくること" do

@@ -43,7 +43,7 @@ describe E4U::Softbank do
     end
 
     it "sjisが返ってくること" do
-      @emj.sjis.should == "\xF9\x8B"
+      @emj.sjis.dump.should == "\xF9\x8B".dump
     end
 
     it "alternate?が返ってくること" do

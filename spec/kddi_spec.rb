@@ -52,7 +52,7 @@ describe E4U::KDDI do
     end
 
     it "sjisが返ってくること" do
-      @emj.sjis.should == "\xF6\x60"
+      @emj.sjis.dump.should == "\xF6\x60".dump
     end
 
     it "alternate?が返ってくること" do
@@ -70,7 +70,7 @@ describe E4U::KDDI do
     end
 
     it "sjisが返ってくること" do
-      @emj.sjis.should == "\xF6\x60"
+      @emj.sjis.dump.should == "\xF6\x60".dump
     end
 
     it "alternate?が返ってくること" do

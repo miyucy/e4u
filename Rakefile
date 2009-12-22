@@ -5,8 +5,8 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "e4u"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.summary = %Q{Emoji4Unicode for Ruby}
+    gem.description = %Q{Emoji4Unicode for Ruby}
     gem.email = "fistfvck@gmail.com"
     gem.homepage = "http://github.com/fistfvck/e4u"
     gem.authors = ["fistfvck"]
