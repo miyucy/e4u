@@ -66,8 +66,24 @@ module E4U
   end
 
   class KDDIWeb::Emoji < KDDI::Emoji
-    def utf8
-      sjis.unpack('n*').map{ |char| char - 1792 }.pack('U')
+    alias :parent_initialize :initialize
+    alias :parent_unicode_to_cp932 :unicode_to_cp932
+
+    def initialize attributes
+      attributes = attributes.dup
+      attributes.each do |key, val|
+        next unless key == :unicode
+        hex = val.sub(/\A[\>\*\+]/, '')
+        break if hex.size == 0
+        attributes[key] = hex.split(/\+/, -1).map { |ch|
+          "%04X" % [parent_unicode_to_cp932(ch.hex) - 1792]
+        }.join('+')
+      end
+      parent_initialize attributes
+    end
+
+    def unicode_to_cp932 octet
+      octet + 1792
     end
   end
 end

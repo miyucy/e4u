@@ -47,6 +47,10 @@ describe E4U::KDDI do
       @emj = @kddi.find{ |e| e[:number] == '44' }.kddi_emoji
     end
 
+    it "unicodeが返ってくること" do
+      @emj.unicode.should == 'E488'
+    end
+
     it "utf8が返ってくること" do
       @emj.utf8.should == [0xE488].pack('U')
     end
@@ -63,6 +67,10 @@ describe E4U::KDDI do
   describe E4U::KDDIWeb::Emoji do
     before :all do
       @emj = @kddi.find{ |e| e[:number] == '44' }.kddiweb_emoji
+    end
+
+    it "unicodeが変化していること" do
+      @emj.unicode.should == 'EF60'
     end
 
     it "utf8が返ってくること" do
