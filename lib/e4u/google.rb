@@ -41,7 +41,8 @@ module E4U
 
   class Google::Emoji < Base::Emoji
     def proposal?
-      @attributes[:in_proposal] == 'yes'
+      prop = respond_to?(:in_proposal) ? in_proposal : 'no'
+      prop == 'yes'
     end
 
     def translate carrier

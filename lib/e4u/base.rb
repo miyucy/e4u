@@ -52,10 +52,10 @@ module E4U
 
   class Base::Emoji
     def initialize attributes
-      @attributes = attributes
-      @attributes.each do |key, value|
+      attributes.each do |key, value|
         next if key =~ /\A(id|object_id|__(id|send)__)\z/
-        self.class.class_eval("def #{key}; @attributes[:#{key}]; end", __FILE__, __LINE__)
+        instance_variable_set("@#{key}", value)
+        self.class.__send__ :attr_reader, key.to_sym
       end
     end
 
