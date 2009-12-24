@@ -4,6 +4,10 @@ module E4U
   class Base
     include Enumerable
 
+    def initialize
+      @xml = @data = nil
+    end
+
     def each
       data.each do |element|
         yield element
@@ -13,6 +17,7 @@ module E4U
 
     private
 
+    @data = []
     def data
       return @data if @data
       @data = []
