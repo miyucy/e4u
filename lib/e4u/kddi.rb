@@ -23,6 +23,10 @@ module E4U
   end
 
   class KDDI::Emoji < Base::Emoji
+    def name_ja; nil; end
+    def number; nil; end
+    def unicode; nil; end
+
     private
 
     def unicode_to_cp932 octet

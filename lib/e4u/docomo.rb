@@ -20,6 +20,11 @@ module E4U
   end
 
   class DoCoMo::Emoji < Base::Emoji
+    def jis; nil; end
+    def name_en; nil; end
+    def name_ja; nil; end
+    def unicode; nil; end
+
     private
 
     def unicode_to_cp932 octet

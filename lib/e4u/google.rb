@@ -40,9 +40,22 @@ module E4U
   end
 
   class Google::Emoji < Base::Emoji
+    def docomo; nil; end
+    def glyphRefID; nil; end
+    def google; nil; end
+    def id; nil; end
+    def img_from; nil; end
+    def in_proposal; nil; end
+    def kddi; nil; end
+    def name; nil; end
+    def oldname; nil; end
+    def softbank; nil; end
+    def text_fallback; nil; end
+    def text_repr; nil; end
+    def unicode; nil; end
+
     def proposal?
-      prop = respond_to?(:in_proposal) ? in_proposal : 'no'
-      prop == 'yes'
+      in_proposal == 'yes'
     end
 
     def translate carrier

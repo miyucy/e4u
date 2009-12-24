@@ -109,6 +109,30 @@ describe E4U::Google do
       @emj.utf8.should == [0x2600].pack('U')
     end
 
+    it "should respond to in_proposal" do
+      @google.each do |e|
+        e.google_emoji.respond_to?(:in_proposal).should be_true
+      end
+    end
+
+    it "should respond to text_fallback" do
+      @google.each do |e|
+        e.google_emoji.respond_to?(:text_fallback).should be_true
+      end
+    end
+
+    it "should respond to text_repr" do
+      @google.each do |e|
+        e.google_emoji.respond_to?(:text_repr).should be_true
+      end
+    end
+
+    it "should respond to desc" do
+      @google.each do |e|
+        e.google_emoji.respond_to?(:desc).should be_true
+      end
+    end
+
     it "alternate?が返ってくること" do
       @emj.alternate?.should be_false
     end
