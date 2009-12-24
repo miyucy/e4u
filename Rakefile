@@ -44,7 +44,6 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-require 'pp'
 desc "Download xml"
 task :data => [:data_directories,
                'data/emoji4unicode.xml',
