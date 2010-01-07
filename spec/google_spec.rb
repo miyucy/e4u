@@ -39,6 +39,15 @@ describe E4U::Google do
     de.sjis.dump.should == "\xF8\x9F".dump
   end
 
+  it "DoCoMoの複合絵文字が返ってくること" do
+    { '00F' => [[0xE63E, 0xE63F].pack('U*'), [0xF89F, 0xF8A0].pack('n*')],
+      '4B8' => [[0xE669, 0xE6EF].pack('U*'), [0xF8CA, 0xF994].pack('n*')] }.each do |id, (utf8, sjis)|
+      de = @google.find{ |e| e[:id] == id }.docomo_emoji
+      de.utf8.should == utf8
+      de.sjis.should == sjis
+    end
+  end
+
   it "kddi_emojiでE4U::KDDI::Emojiが返ってくること" do
     ke = @google.find{ |e| e[:id] == '000' }.kddi_emoji
     ke.should be_instance_of E4U::KDDI::Emoji
@@ -46,11 +55,37 @@ describe E4U::Google do
     ke.sjis.dump.should == "\xF6\x60".dump
   end
 
+  it "KDDIの複合絵文字が返ってくること" do
+    { '331' => [[0xE471, 0xE5B1].pack('U*'), [0xF649, 0xF7CE].pack('n*')], }.each do |id, (utf8, sjis)|
+      de = @google.find{ |e| e[:id] == id }.kddi_emoji
+      de.utf8.should == utf8
+      de.sjis.should == sjis
+    end
+  end
+
+  it "KDDI(Web)の複合絵文字が返ってくること" do
+    { '331' => [[0xEF49, 0xF0CE].pack('U*'), [0xF649, 0xF7CE].pack('n*')], }.each do |id, (utf8, sjis)|
+      de = @google.find{ |e| e[:id] == id }.kddiweb_emoji
+      de.utf8.should == utf8
+      de.sjis.should == sjis
+    end
+  end
+
   it "softbank_emojiでE4U::Softbank::Emojiが返ってくること" do
     se = @google.find{ |e| e[:id] == '000' }.softbank_emoji
     se.should be_instance_of E4U::Softbank::Emoji
     se.utf8.should == [0xE04A].pack('U')
     se.sjis.dump.should == "\xF9\x8B".dump
+  end
+
+  it "Softbankの複合絵文字が返ってくること" do
+    { '00F' => [[0xE04A, 0xE049].pack('U*'), [0xF98B, 0xF98A].pack('n*')],
+      '331' => [[0xE415, 0xE331].pack('U*'), [0xFB55, 0xF9D1].pack('n*')],
+      '824' => [[0xE103, 0xE328].pack('U*'), [0xF743, 0xF9C8].pack('n*')], }.each do |id, (utf8, sjis)|
+      de = @google.find{ |e| e[:id] == id }.softbank_emoji
+      de.utf8.should == utf8
+      de.sjis.should == sjis
+    end
   end
 
   it "Unicode絵文字が返ってくること" do

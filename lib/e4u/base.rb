@@ -66,13 +66,13 @@ module E4U
     def utf8
       hex = unicode.sub(/\A[\>\*\+]/, '')
       raise if hex.size == 0
-      hex.split(/\+/, -1).map{ |ch| ch.hex }.pack('U')
+      hex.split(/\+/, -1).map{ |ch| ch.hex }.pack('U*')
     end
 
     def cp932
       hex = unicode.sub(/\A[\>\*\+]/, '')
       raise if hex.size == 0
-      chr = hex.split(/\+/, -1).map{ |ch| unicode_to_cp932(ch.hex) }.pack('n')
+      chr = hex.split(/\+/, -1).map{ |ch| unicode_to_cp932(ch.hex) }.pack('n*')
       chr.force_encoding('CP932') if chr.respond_to? :force_encoding
       chr
     end
