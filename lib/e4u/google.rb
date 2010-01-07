@@ -31,11 +31,11 @@ module E4U
     end
 
     def unicode_emoji
-      Google::Emoji.new :unicode => self[:unicode]
+      Google::Emoji.new self
     end
 
     def google_emoji
-      Google::Emoji.new self
+      Google::Emoji.new self.merge(:unicode => self[:google])
     end
   end
 

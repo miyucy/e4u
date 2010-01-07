@@ -53,6 +53,16 @@ describe E4U::Google do
     se.sjis.dump.should == "\xF9\x8B".dump
   end
 
+  it "Unicode絵文字が返ってくること" do
+    ue = @google.find{ |e| e[:id] == '000' }.unicode_emoji
+    ue.utf8.should == [0x2600].pack('U')
+  end
+
+  it "Google絵文字が返ってくること" do
+    ue = @google.find{ |e| e[:id] == '000' }.google_emoji
+    ue.utf8.should == [0xFE000].pack('U')
+  end
+
   describe E4U::Google::Emoji do
     before :all do
       @emj = @google.find{ |e| e[:id] == '000' }.google_emoji
@@ -106,7 +116,8 @@ describe E4U::Google do
     end
 
     it "utf8が返ってくること" do
-      @emj.utf8.should == [0x2600].pack('U')
+      @emj.unicode.should == 'FE000'
+      @emj.utf8.should == [0xFE000].pack('U')
     end
 
     it "should respond to in_proposal" do
