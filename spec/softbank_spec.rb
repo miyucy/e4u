@@ -33,6 +33,14 @@ describe E4U::Softbank do
     emj.softbank_emoji.should be_instance_of E4U::Softbank::Emoji
   end
 
+  it "E4U.softbankから取得した絵文字にfallback_textがないこと" do
+    @softbank.each do |data|
+      emoji = data.softbank_emoji
+      emoji.fallback_text.should be_nil
+      emoji.should_not be_fallback
+    end
+  end
+
   describe E4U::Softbank::Emoji do
     before :all do
       @emj = @softbank.find{ |e| e[:number] == '81' }.softbank_emoji

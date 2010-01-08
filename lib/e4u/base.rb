@@ -1,4 +1,5 @@
 require 'rexml/document'
+require 'nkf'
 
 module E4U
   class Base
@@ -52,6 +53,7 @@ module E4U
 
   class Base::Emoji
     def initialize attributes
+      @fallback_text = nil
       attributes.each do |key, value|
         next if key =~ /\A(id|object_id|__(id|send)__)\z/
         instance_variable_set("@#{key}", value)
@@ -59,17 +61,24 @@ module E4U
       end
     end
 
+    attr_reader :fallback_text
+    def fallback?
+      !!fallback_text
+    end
+
     def alternate?
       !!(unicode =~ /\A>/)
     end
 
     def utf8
+      return fallback_text if fallback?
       hex = unicode.sub(/\A[\>\*\+]/, '')
       raise if hex.size == 0
       hex.split(/\+/, -1).map{ |ch| ch.hex }.pack('U*')
     end
 
     def cp932
+      return NKF.nkf('-Wsm0x', fallback_text) if fallback?
       hex = unicode.sub(/\A[\>\*\+]/, '')
       raise if hex.size == 0
       chr = hex.split(/\+/, -1).map{ |ch| unicode_to_cp932(ch.hex) }.pack('n*')

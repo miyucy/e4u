@@ -15,19 +15,19 @@ module E4U
 
   module Google::Emojinize
     def docomo_emoji
-      DoCoMo::Emoji.new :unicode => self[:docomo]
+      DoCoMo::Emoji.new attribute_with_fallback_text(:docomo)
     end
 
     def kddi_emoji
-      KDDI::Emoji.new :unicode => self[:kddi]
+      KDDI::Emoji.new attribute_with_fallback_text(:kddi)
     end
 
     def kddiweb_emoji
-      KDDIWeb::Emoji.new :unicode => self[:kddi]
+      KDDIWeb::Emoji.new attribute_with_fallback_text(:kddi)
     end
 
     def softbank_emoji
-      Softbank::Emoji.new :unicode => self[:softbank]
+      Softbank::Emoji.new attribute_with_fallback_text(:softbank)
     end
 
     def unicode_emoji
@@ -36,6 +36,18 @@ module E4U
 
     def google_emoji
       Google::Emoji.new self.merge(:unicode => self[:google])
+    end
+
+    private
+
+    def attribute_with_fallback_text type
+      attributes = { :unicode => self[type] }
+      unless attributes[:unicode]
+        attributes[:fallback_text]   = self[:text_fallback]
+        attributes[:fallback_text] ||= self[:text_repr]
+        attributes[:fallback_text] ||= [0x3013].pack('U')
+      end
+      attributes
     end
   end
 
@@ -61,11 +73,20 @@ module E4U
     def translate carrier
       case carrier.to_s.downcase
       when 'docomo'
-        E4U.docomo.find{ |e| e[:unicode] == docomo }.docomo_emoji
+        emoji = E4U.docomo.find{ |e| e[:unicode] == docomo }
+        return emoji.docomo_emoji if emoji
+        E4U.google.find{ |e| e[:google] == google }.docomo_emoji
+
       when 'kddi'
-        E4U.kddi.find{ |e| e[:unicode] == kddi }.kddi_emoji
+        emoji = E4U.kddi.find{ |e| e[:unicode] == kddi }
+        return emoji.kddi_emoji if emoji
+        E4U.google.find{ |e| e[:google] == google }.kddi_emoji
+
       when 'softbank'
-        E4U.softbank.find{ |e| e[:unicode] == softbank }.softbank_emoji
+        emoji = E4U.softbank.find{ |e| e[:unicode] == softbank }
+        return emoji.softbank_emoji if emoji
+        E4U.google.find{ |e| e[:google] == google }.softbank_emoji
+
       else
         raise ArgumentError
       end

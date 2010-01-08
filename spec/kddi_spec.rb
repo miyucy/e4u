@@ -64,6 +64,14 @@ describe E4U::KDDI do
     end
   end
 
+  it "E4U.kddiから取得した絵文字にfallback_textがないこと" do
+    @kddi.each do |data|
+      emoji = data.kddi_emoji
+      emoji.fallback_text.should be_nil
+      emoji.should_not be_fallback
+    end
+  end
+
   describe E4U::KDDIWeb::Emoji do
     before :all do
       @emj = @kddi.find{ |e| e[:number] == '44' }.kddiweb_emoji

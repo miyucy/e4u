@@ -48,6 +48,47 @@ describe E4U::Google do
     end
   end
 
+  context "DoCoMoの該当絵文字が無い場合" do
+    it "fallback?が真になること" do
+      @google.each do |e|
+        next if e[:docomo]
+        de = e.docomo_emoji
+        de.should be_fallback
+      end
+    end
+
+    it "fallback_textで長さ1以上の文字列が返ってくること" do
+      @google.each do |e|
+        next if e[:docomo]
+        de = e.docomo_emoji
+        de.fallback_text.should be_instance_of String
+        de.fallback_text.size.should >= 1
+      end
+    end
+
+    it "utf8でfallback_textが返ってくること" do
+      @google.each do |e|
+        next if e[:docomo]
+        except   = e[:text_fallback]
+        except ||= e[:text_repr]
+        except ||= [0x3013].pack('U')
+
+        e.docomo_emoji.utf8.should == except
+      end
+    end
+
+    it "sjisでfallback_textが返ってくること" do
+      @google.each do |e|
+        next if e[:docomo]
+        except   = e[:text_fallback]
+        except ||= e[:text_repr]
+        except ||= [0x3013].pack('U')
+
+        e.docomo_emoji.sjis.should == NKF.nkf('-Wsm0x', except)
+      end
+    end
+  end
+
   it "kddi_emojiでE4U::KDDI::Emojiが返ってくること" do
     ke = @google.find{ |e| e[:id] == '000' }.kddi_emoji
     ke.should be_instance_of E4U::KDDI::Emoji
@@ -57,9 +98,9 @@ describe E4U::Google do
 
   it "KDDIの複合絵文字が返ってくること" do
     { '331' => [[0xE471, 0xE5B1].pack('U*'), [0xF649, 0xF7CE].pack('n*')], }.each do |id, (utf8, sjis)|
-      de = @google.find{ |e| e[:id] == id }.kddi_emoji
-      de.utf8.should == utf8
-      de.sjis.should == sjis
+      ke = @google.find{ |e| e[:id] == id }.kddi_emoji
+      ke.utf8.should == utf8
+      ke.sjis.should == sjis
     end
   end
 
@@ -68,6 +109,47 @@ describe E4U::Google do
       de = @google.find{ |e| e[:id] == id }.kddiweb_emoji
       de.utf8.should == utf8
       de.sjis.should == sjis
+    end
+  end
+
+  context "KDDIの該当絵文字が無い場合" do
+    it "fallback?が真になること" do
+      @google.each do |e|
+        next if e[:kddi]
+        ke = e.kddi_emoji
+        ke.should be_fallback
+      end
+    end
+
+    it "fallback_textで長さ1以上の文字列が返ってくること" do
+      @google.each do |e|
+        next if e[:kddi]
+        ke = e.kddi_emoji
+        ke.fallback_text.should be_instance_of String
+        ke.fallback_text.size.should >= 1
+      end
+    end
+
+    it "utf8でfallback_textが返ってくること" do
+      @google.each do |e|
+        next if e[:kddi]
+        except   = e[:text_fallback]
+        except ||= e[:text_repr]
+        except ||= [0x3013].pack('U')
+
+        e.kddi_emoji.utf8.should == except
+      end
+    end
+
+    it "sjisでSJISのfallback_textが返ってくること" do
+      @google.each do |e|
+        next if e[:kddi]
+        except   = e[:text_fallback]
+        except ||= e[:text_repr]
+        except ||= [0x3013].pack('U')
+
+        e.kddi_emoji.sjis.should == NKF.nkf('-Wsm0x', except)
+      end
     end
   end
 
@@ -82,9 +164,50 @@ describe E4U::Google do
     { '00F' => [[0xE04A, 0xE049].pack('U*'), [0xF98B, 0xF98A].pack('n*')],
       '331' => [[0xE415, 0xE331].pack('U*'), [0xFB55, 0xF9D1].pack('n*')],
       '824' => [[0xE103, 0xE328].pack('U*'), [0xF743, 0xF9C8].pack('n*')], }.each do |id, (utf8, sjis)|
-      de = @google.find{ |e| e[:id] == id }.softbank_emoji
-      de.utf8.should == utf8
-      de.sjis.should == sjis
+      se = @google.find{ |e| e[:id] == id }.softbank_emoji
+      se.utf8.should == utf8
+      se.sjis.should == sjis
+    end
+  end
+
+  context "Softbankの該当絵文字が無い場合" do
+    it "fallback?が真になること" do
+      @google.each do |e|
+        next if e[:softbank]
+        se = e.softbank_emoji
+        se.should be_fallback
+      end
+    end
+
+    it "fallback_textで長さ1以上の文字列が返ってくること" do
+      @google.each do |e|
+        next if e[:softbank]
+        se = e.softbank_emoji
+        se.fallback_text.should be_instance_of String
+        se.fallback_text.size.should >= 1
+      end
+    end
+
+    it "utf8でfallback_textが返ってくること" do
+      @google.each do |e|
+        next if e[:softbank]
+        except   = e[:text_fallback]
+        except ||= e[:text_repr]
+        except ||= [0x3013].pack('U')
+
+        e.softbank_emoji.utf8.should == except
+      end
+    end
+
+    it "sjisでSJISのfallback_textが返ってくること" do
+      @google.each do |e|
+        next if e[:softbank]
+        except   = e[:text_fallback]
+        except ||= e[:text_repr]
+        except ||= [0x3013].pack('U')
+
+        e.softbank_emoji.sjis.should == NKF.nkf('-Wsm0x', except)
+      end
     end
   end
 
@@ -123,23 +246,43 @@ describe E4U::Google do
       @emj.desc.should match(/clear weather/i)
     end
 
-    it "translate(:docomo)でDoCoMo絵文字に変換できること" do
-      de = @emj.translate :docomo
-      de.utf8.should == [0xE63E].pack('U')
-    end
+    context "translate" do
+      it ":docomoでDoCoMo絵文字に変換できること" do
+        de = @emj.translate :docomo
+        de.utf8.should == [0xE63E].pack('U')
+      end
 
-    it "translate(:kddi)でKDDI絵文字に変換できること" do
-      de = @emj.translate :kddi
-      de.utf8.should == [0xE488].pack('U')
-    end
+      it ":kddiでKDDI絵文字に変換できること" do
+        de = @emj.translate :kddi
+        de.utf8.should == [0xE488].pack('U')
+      end
 
-    it "translate(:softbank)でSoftbank絵文字に変換できること" do
-      de = @emj.translate :softbank
-      de.utf8.should == [0xE04A].pack('U')
-    end
+      it ":softbankでSoftbank絵文字に変換できること" do
+        de = @emj.translate :softbank
+        de.utf8.should == [0xE04A].pack('U')
+      end
 
-    it "translateでArgumentErrorが起こること" do
-      lambda{ @emj.translate :emobile }.should raise_error ArgumentError
+      it "translateでArgumentErrorが起こること" do
+        lambda{ @emj.translate :emobile }.should raise_error ArgumentError
+      end
+
+      it "該当絵文字がなくても fallback_text に変換できること" do
+        # e4u/lib/e4u/google.rb:76:in `translate': undefined method `docomo_emoji' for nil:NilClass (NoMethodError)
+        lambda{
+          @google.find{ |e| e[:docomo].nil? }.google_emoji.translate(:docomo)
+        }.should_not raise_error NoMethodError
+
+        @google.each do |e|
+          next unless e[:google]
+          next if e[:docomo]
+
+          except   = e[:text_fallback]
+          except ||= e[:text_repr]
+          except ||= [0x3013].pack('U')
+
+          e.google_emoji.translate(:docomo).utf8.should == except
+        end
+      end
     end
 
     it "proposal?が返ってくること" do

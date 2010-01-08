@@ -34,6 +34,14 @@ describe E4U::DoCoMo do
     emj.docomo_emoji.should be_instance_of E4U::DoCoMo::Emoji
   end
 
+  it "E4U.docomoから取得した絵文字にfallback_textがないこと" do
+    @docomo.each do |data|
+      emoji = data.docomo_emoji
+      emoji.fallback_text.should be_nil
+      emoji.should_not be_fallback
+    end
+  end
+
   describe E4U::DoCoMo::Emoji do
     before :all do
       @emj = @docomo.find{ |e| e[:unicode] == 'E63E' }.docomo_emoji
