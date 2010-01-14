@@ -5,7 +5,7 @@ module E4U
     private
 
     def path
-      File.expand_path(File.join('..', '..', 'data', 'emoji4unicode.xml'), File.dirname(__FILE__))
+      File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'data', 'emoji4unicode.xml'))
     end
 
     def emojinize object
