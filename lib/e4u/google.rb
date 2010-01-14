@@ -38,15 +38,15 @@ module E4U
       Google::Emoji.new self.merge(:unicode => self[:google])
     end
 
+    def text_fallback
+      self[:text_fallback] || self[:text_repr] || [0x3013].pack('U')
+    end
+
     private
 
     def attribute_with_fallback_text type
       attributes = { :unicode => self[type] }
-      unless attributes[:unicode]
-        attributes[:fallback_text]   = self[:text_fallback]
-        attributes[:fallback_text] ||= self[:text_repr]
-        attributes[:fallback_text] ||= [0x3013].pack('U')
-      end
+      attributes[:fallback_text] = text_fallback unless attributes[:unicode]
       attributes
     end
   end

@@ -32,6 +32,17 @@ describe E4U::Google do
     emj[:unicode].should == '2600'
   end
 
+  # TODO: 紛らわしい
+  it "text_fallbackでfallback_textが返ってくること" do
+    @google.each do |e|
+      except   = e[:text_fallback]
+      except ||= e[:text_repr]
+      except ||= [0x3013].pack('U')
+
+      e.text_fallback.should == except
+    end
+  end
+
   it "docomo_emojiでE4U::DoCoMo::Emojiが返ってくること" do
     de = @google.find{ |e| e[:id] == '000' }.docomo_emoji
     de.should be_instance_of E4U::DoCoMo::Emoji
