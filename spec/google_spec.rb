@@ -55,7 +55,7 @@ describe E4U::Google do
       '4B8' => [[0xE669, 0xE6EF].pack('U*'), [0xF8CA, 0xF994].pack('n*')] }.each do |id, (utf8, sjis)|
       de = @google.find{ |e| e[:id] == id }.docomo_emoji
       de.utf8.should == utf8
-      de.sjis.should == sjis
+      de.sjis.dump.should == sjis.dump
     end
   end
 
@@ -80,22 +80,14 @@ describe E4U::Google do
     it "utf8でfallback_textが返ってくること" do
       @google.each do |e|
         next if e[:docomo]
-        except   = e[:text_fallback]
-        except ||= e[:text_repr]
-        except ||= [0x3013].pack('U')
-
-        e.docomo_emoji.utf8.should == except
+        e.docomo_emoji.utf8.should == e.text_fallback
       end
     end
 
     it "sjisでfallback_textが返ってくること" do
       @google.each do |e|
         next if e[:docomo]
-        except   = e[:text_fallback]
-        except ||= e[:text_repr]
-        except ||= [0x3013].pack('U')
-
-        e.docomo_emoji.sjis.should == NKF.nkf('-Wsm0x', except)
+        e.docomo_emoji.sjis.should == NKF.nkf('-m0xWs --oc=CP932', e.text_fallback)
       end
     end
   end
@@ -111,7 +103,7 @@ describe E4U::Google do
     { '331' => [[0xE471, 0xE5B1].pack('U*'), [0xF649, 0xF7CE].pack('n*')], }.each do |id, (utf8, sjis)|
       ke = @google.find{ |e| e[:id] == id }.kddi_emoji
       ke.utf8.should == utf8
-      ke.sjis.should == sjis
+      ke.sjis.dump.should == sjis.dump
     end
   end
 
@@ -119,7 +111,7 @@ describe E4U::Google do
     { '331' => [[0xEF49, 0xF0CE].pack('U*'), [0xF649, 0xF7CE].pack('n*')], }.each do |id, (utf8, sjis)|
       de = @google.find{ |e| e[:id] == id }.kddiweb_emoji
       de.utf8.should == utf8
-      de.sjis.should == sjis
+      de.sjis.dump.should == sjis.dump
     end
   end
 
@@ -144,22 +136,14 @@ describe E4U::Google do
     it "utf8でfallback_textが返ってくること" do
       @google.each do |e|
         next if e[:kddi]
-        except   = e[:text_fallback]
-        except ||= e[:text_repr]
-        except ||= [0x3013].pack('U')
-
-        e.kddi_emoji.utf8.should == except
+        e.kddi_emoji.utf8.should == e.text_fallback
       end
     end
 
     it "sjisでSJISのfallback_textが返ってくること" do
       @google.each do |e|
         next if e[:kddi]
-        except   = e[:text_fallback]
-        except ||= e[:text_repr]
-        except ||= [0x3013].pack('U')
-
-        e.kddi_emoji.sjis.should == NKF.nkf('-Wsm0x', except)
+        e.kddi_emoji.sjis.should == NKF.nkf('-m0xWs --oc=CP932', e.text_fallback)
       end
     end
   end
@@ -183,7 +167,7 @@ describe E4U::Google do
                 "\x1B$E#\x0F\x1B$OH\x0F"], }.each do |id, (utf8, sjis, webcode)|
       se = @google.find{ |e| e[:id] == id }.softbank_emoji
       se.utf8.should == utf8
-      se.sjis.should == sjis
+      se.sjis.dump.should == sjis.dump
       se.webcode.should == webcode
     end
   end
@@ -209,22 +193,14 @@ describe E4U::Google do
     it "utf8でfallback_textが返ってくること" do
       @google.each do |e|
         next if e[:softbank]
-        except   = e[:text_fallback]
-        except ||= e[:text_repr]
-        except ||= [0x3013].pack('U')
-
-        e.softbank_emoji.utf8.should == except
+        e.softbank_emoji.utf8.should == e.text_fallback
       end
     end
 
     it "sjisでSJISのfallback_textが返ってくること" do
       @google.each do |e|
         next if e[:softbank]
-        except   = e[:text_fallback]
-        except ||= e[:text_repr]
-        except ||= [0x3013].pack('U')
-
-        e.softbank_emoji.sjis.should == NKF.nkf('-Wsm0x', except)
+        e.softbank_emoji.sjis.should == NKF.nkf('-m0xWs --oc=CP932', e.text_fallback)
       end
     end
   end
@@ -293,12 +269,7 @@ describe E4U::Google do
         @google.each do |e|
           next unless e[:google]
           next if e[:docomo]
-
-          except   = e[:text_fallback]
-          except ||= e[:text_repr]
-          except ||= [0x3013].pack('U')
-
-          e.google_emoji.translate(:docomo).utf8.should == except
+          e.google_emoji.translate(:docomo).utf8.should == e.text_fallback
         end
       end
     end

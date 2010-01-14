@@ -78,7 +78,7 @@ module E4U
     end
 
     def cp932
-      return NKF.nkf('-Wsm0x', fallback_text) if fallback?
+      return NKF.nkf('-m0xWs --oc=CP932', fallback_text) if fallback?
       hex = unicode.sub(/\A[\>\*\+]/, '')
       raise if hex.size == 0
       chr = hex.split(/\+/, -1).map{ |ch| unicode_to_cp932(ch.hex) }.pack('n*')
