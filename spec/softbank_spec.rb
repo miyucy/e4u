@@ -57,5 +57,9 @@ describe E4U::Softbank do
     it "alternate?が返ってくること" do
       @emj.alternate?.should be_false
     end
+
+    it "webcodeが返ってくること" do
+      @emj.webcode.should == "\x1B\x24Gj\x0F"
+    end
   end
 end

@@ -24,6 +24,30 @@ module E4U
     def number; nil end
     def unicode; nil end
 
+    def webcode
+      return NKF.nkf('-Wsm0x', fallback_text) if fallback?
+      hex = unicode.sub(/\A[\>\*\+]/, '')
+      raise if hex.size == 0
+      buf = []
+      prev = nil
+      hex.split(/\+/, -1).each do |e|
+        code = e.hex
+        high = (code & 0x0700) >> 8
+        low  = (code & 0x00FF) + 32
+        page = %w(G E F O P Q)[high]
+        raise unless page
+        unless page == prev
+          buf << "\x0F" if buf.size > 0
+          buf << "\x1B\x24#{page}"
+        end
+        buf << low.chr
+        prev = page
+      end
+      buf << "\x0F"
+      str = buf.join
+      #str.force_encoding(???) if str.respond_to? :force_encoding
+    end
+
     private
 
     def unicode_to_cp932 octet

@@ -161,12 +161,19 @@ describe E4U::Google do
   end
 
   it "Softbankの複合絵文字が返ってくること" do
-    { '00F' => [[0xE04A, 0xE049].pack('U*'), [0xF98B, 0xF98A].pack('n*')],
-      '331' => [[0xE415, 0xE331].pack('U*'), [0xFB55, 0xF9D1].pack('n*')],
-      '824' => [[0xE103, 0xE328].pack('U*'), [0xF743, 0xF9C8].pack('n*')], }.each do |id, (utf8, sjis)|
+    { '00F' => [[0xE04A, 0xE049].pack('U*'),
+                [0xF98B, 0xF98A].pack('n*'),
+                "\x1B$Gji\x0F"],
+      '331' => [[0xE415, 0xE331].pack('U*'),
+                [0xFB55, 0xF9D1].pack('n*'),
+                "\x1B$P5\x0F\x1B$OQ\x0F"],
+      '824' => [[0xE103, 0xE328].pack('U*'),
+                [0xF743, 0xF9C8].pack('n*'),
+                "\x1B$E#\x0F\x1B$OH\x0F"], }.each do |id, (utf8, sjis, webcode)|
       se = @google.find{ |e| e[:id] == id }.softbank_emoji
       se.utf8.should == utf8
       se.sjis.should == sjis
+      se.webcode.should == webcode
     end
   end
 
