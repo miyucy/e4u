@@ -1,5 +1,3 @@
-$LOAD_PATH.unshift File.dirname(__FILE__)
-
 require 'e4u/base'
 require 'e4u/docomo'
 require 'e4u/kddi'
