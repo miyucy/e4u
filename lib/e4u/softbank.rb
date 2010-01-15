@@ -25,7 +25,7 @@ module E4U
     def unicode; nil end
 
     def webcode
-      return NKF.nkf('-Wsm0x', fallback_text) if fallback?
+      return NKF.nkf('-m0xWs --oc=CP932', fallback_text) if fallback?
       hex = unicode.sub(/\A[\>\*\+]/, '')
       raise if hex.size == 0
       buf = []
